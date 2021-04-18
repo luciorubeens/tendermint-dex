@@ -1,22 +1,35 @@
 module.exports = {
-	root: true,
-	env: {
+    root: true,
+
+    env: {
 		node: true
 	},
-	extends: [
+
+    extends: [
 		'plugin:vue/vue3-essential',
 		'eslint:recommended',
 		'plugin:prettier/recommended',
 		'@vue/prettier'
 	],
-	parserOptions: {
-		parser: 'babel-eslint'
+
+    parserOptions: {
+		parser: '@typescript-eslint/parser'
 	},
-	plugins: ['prettier'],
-	rules: {
+
+    plugins: ['prettier'],
+
+    rules: {
 		'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
 		'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
 		'no-unused-vars': 'off',
 		'vue/component-name-in-template-casing': ['error', 'PascalCase']
-	}
+	},
+
+    'extends': [
+      'plugin:vue/vue3-essential',
+      'eslint:recommended',
+      'plugin:prettier/recommended',
+      '@vue/prettier',
+      '@vue/typescript'
+    ]
 }

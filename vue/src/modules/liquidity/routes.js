@@ -14,5 +14,5 @@ export default [
 	{
 		path: '/liquidity/pools',
 		component: Pools
-	},
+	}
 ]

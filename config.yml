@@ -9,4 +9,4 @@ validator:
   staked: "1000000000stake"
 client:
   vuex:
-    path: "vue/src/store"
+    path: "vue"

@@ -54,12 +54,15 @@ export default defineComponent({
 			const depositCoins = [pair.tokenA, pair.tokenB]
 
 			const value = { poolCreatorAddress, poolTypeId, depositCoins }
-			const fee = pool.fee;
+			const fee = pool.fee
 
 			try {
-				const result = await store.dispatch('tendermint.liquidity.v1beta1/sendMsgCreatePool', { value, fee })
+				const result = await store.dispatch(
+					'tendermint.liquidity.v1beta1/sendMsgCreatePool',
+					{ value, fee }
+				)
 				console.log({ result })
-			}	catch (e) {
+			} catch (e) {
 				console.error(e)
 			}
 		}
