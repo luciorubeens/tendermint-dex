@@ -28,6 +28,7 @@
 import { defineComponent, reactive } from 'vue'
 import { useStore } from 'vuex'
 
+// TODO: List available remote denoms instead of static
 export default defineComponent({
 	setup() {
 		const store = useStore()
