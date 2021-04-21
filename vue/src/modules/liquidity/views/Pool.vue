@@ -5,16 +5,21 @@
 		</div>
 
 		<div v-else-if="error">
-			<span>{{error}}</span>
+			<span>{{ error }}</span>
 		</div>
 
 		<div v-else-if="pool">
 			<div>
 				<h1>Pair {{ pool.name }}</h1>
 
+				<div v-if="isLoggedIn">
+					<h4>My Balances</h4>
+					{{poolBalance}}
+				</div>
+
 				<div>
 					<h4>Add Liquidity</h4>
-					<DepositForm :denoms="pool.reserve_coin_denoms" :poolId="pool.id" />
+					<DepositForm :denoms="pool.reserve_coin_denoms" :poolId="pool.id" @success="updateBalances" />
 				</div>
 			</div>
 		</div>
@@ -22,10 +27,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, computed, ref } from 'vue'
+import { defineComponent, reactive, onMounted, computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import DepositForm from '../components/DepositForm/DepositForm.vue'
+import { useBank, useWallet } from '../composables'
 
 export default defineComponent({
 	name: 'Pool',
@@ -38,7 +44,12 @@ export default defineComponent({
 		const route = useRoute()
 		const store = useStore()
 
+		const { address, isLoggedIn } = useWallet()
+		const { balanceByDenom, updateBalances } = useBank({ address })
+
 		const { id: poolId } = route.params
+
+		const poolBalance = computed(() => balanceByDenom(pool.value?.pool_coin_denom) ?? "0")
 
 		const data = reactive({
 			isLoading: true,
@@ -79,7 +90,10 @@ export default defineComponent({
 		onMounted(() => fetchPool())
 
 		return {
+			updateBalances,
+			poolBalance,
 			pool,
+			isLoggedIn,
 			isLoading: computed(() => data.isLoading),
 			error: computed(() => data.error)
 		}

@@ -1,5 +1,5 @@
 <template>
-	<form @submit.prevent="emitSubmit">
+	<form @submit.prevent="submit">
 		<fieldset>
 			<input v-model="deposit.pair.tokenA.amount" name="token-a-amount" />
 			<span>{{ deposit.pair.tokenA.denom }}</span>
@@ -33,7 +33,9 @@ export default defineComponent({
 		}
 	},
 
-	setup(props) {
+	emits: ['success'],
+
+	setup(props, { emit }) {
 		const store = useStore()
 
 		const pair = reactive({
@@ -60,10 +62,11 @@ export default defineComponent({
 
 			try {
 				const result = await store.dispatch(
-					'tendermint.liquidity.v1beta1/msgDepositWithinBatch',
+					'tendermint.liquidity.v1beta1/sendMsgDepositWithinBatch',
 					{ value, fee: deposit.fee }
 				)
 				console.log({ result })
+				emit('success')
 			} catch (e) {
 				console.error(e)
 			}

@@ -28,7 +28,13 @@
 import { defineComponent, reactive } from 'vue'
 import { useStore } from 'vuex'
 
-// TODO: List available remote denoms instead of static
+/*
+ * TODO:
+ * - List available remote denoms instead of static
+ * - Fetch pool creation params
+ * - Dynamic denom listing
+ * - Verify for successful transaction
+ */
 export default defineComponent({
 	setup() {
 		const store = useStore()
