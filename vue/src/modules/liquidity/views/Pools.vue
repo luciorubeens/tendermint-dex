@@ -2,76 +2,46 @@
 	<div class="container">
 		<h1>Pools</h1>
 
-		<table>
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Name</th>
-				</tr>
-			</thead>
+		<template v-if="isPending"> loading... </template>
 
-			<tbody>
-				<tr v-for="pool in pools" :key="pool.name">
-					<td>{{ pool.id }}</td>
-					<td>{{ pool.name }}</td>
-				</tr>
-			</tbody>
-		</table>
+		<template v-if="error"></template>
+
+		<template v-else>
+			<table>
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Supply</th>
+						<th>Details</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr v-for="pool in pools" :key="pool.name">
+						<td>{{ pool.id }}</td>
+						<td>{{ pool.name }}</td>
+						<td>{{ pool.supplyAmount }}</td>
+						<td>
+							<router-link :to="{ name: 'liquidity-pool', params: { id: pool.id }}">Open</router-link>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</template>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, onMounted, watch, ref } from 'vue'
-import { useStore } from 'vuex'
+import { defineComponent } from 'vue'
+import { useLiquidityPools } from '../composables'
 
 // TODO: Show loading and error state
 export default defineComponent({
 	setup() {
-		const store = useStore()
+		const { isPending, pools, error } = useLiquidityPools()
 
-		const data = reactive({
-			isLoading: false,
-			result: null,
-			error: null
-		})
-
-		const pools = computed(() => {
-			const result: any = data.result
-
-			if (!result) {
-				return []
-			}
-
-			// TODO: Fetch denom supply
-			const formattedPools = result.pools.map((pool: any) => ({
-				name: pool.reserve_coin_denoms.join('-').toUpperCase(),
-				...pool
-			}))
-
-			return formattedPools
-		})
-
-		const fetchPools = async () => {
-			data.isLoading = true
-			data.error = null
-
-			try {
-				const response = await store.dispatch(
-					'tendermint.liquidity.v1beta1/QueryLiquidityPools',
-					{}
-				)
-				data.result = response
-			} catch (e) {
-				data.error = e.message
-				data.result = null
-			} finally {
-				data.isLoading = false
-			}
-		}
-
-		onMounted(() => fetchPools())
-
-		return { isLoading: data.isLoading, error: data.error, pools }
+		return { isPending, pools, error }
 	}
 })
 </script>

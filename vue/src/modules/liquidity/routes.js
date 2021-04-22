@@ -8,6 +8,7 @@ export default [
 		component: CreatePool
 	},
 	{
+		name: 'liquidity-pool',
 		path: '/liquidity/pool/:id',
 		component: Pool
 	},

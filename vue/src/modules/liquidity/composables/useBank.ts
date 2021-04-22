@@ -22,8 +22,7 @@ export function useBank({ address }: { address: ComputedRef<string> }) {
 		}
 	}
 
-	onMounted(updateBalances)
-	watch(address, updateBalances)
+	watch(address, updateBalances, { immediate: true })
 
 	return { allBalances, balanceByDenom, updateBalances };
 }
