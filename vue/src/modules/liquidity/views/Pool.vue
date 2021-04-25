@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<div v-if="isLoading">
+		<div v-if="isPending">
 			<span>Loading...</span>
 		</div>
 
@@ -8,18 +8,27 @@
 			<span>{{ error }}</span>
 		</div>
 
-		<div v-else-if="pool">
+		<div v-else-if="!pool">
+			<span>Failed to find the pool #{{ poolId }}</span>
+		</div>
+
+		<div v-else>
 			<div>
 				<h1>Pair {{ pool.name }}</h1>
 
 				<div v-if="isLoggedIn">
 					<h4>My Balances</h4>
-					{{poolBalance}}
+					{{walletPoolBalance}}
 				</div>
 
 				<div>
-					<h4>Add Liquidity</h4>
+					<h4>Deposit</h4>
 					<DepositForm :denoms="pool.reserve_coin_denoms" :poolId="pool.id" @success="updateBalances" />
+				</div>
+
+				<div>
+					<h4>Withdraw</h4>
+					<WithdrawForm :poolId="pool.id" @success="updateBalances" />
 				</div>
 			</div>
 		</div>
@@ -27,75 +36,40 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, computed, ref, watch } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
-import DepositForm from '../components/DepositForm/DepositForm.vue'
-import { useBank, useWallet } from '../composables'
+import { useBank, useLiquidityPools, useWallet } from '../composables'
+import DepositForm from '../components/DepositForm'
+import WithdrawForm from '../components/WithdrawForm'
 
 export default defineComponent({
 	name: 'Pool',
 
 	components: {
-		DepositForm
+		DepositForm,
+		WithdrawForm
 	},
 
 	setup() {
 		const route = useRoute()
-		const store = useStore()
 
 		const { address, isLoggedIn } = useWallet()
 		const { balanceByDenom, updateBalances } = useBank({ address })
+		const { isPending, error, findPoolById } = useLiquidityPools()
 
-		const { id: poolId } = route.params
+		const poolId = computed(() => route.params.id as string)
 
-		const poolBalance = computed(() => balanceByDenom(pool.value?.pool_coin_denom) ?? "0")
-
-		const data = reactive({
-			isLoading: true,
-			result: null,
-			error: null
-		})
-
-		const fetchPool = async () => {
-			data.isLoading = true
-			data.error = null
-
-			try {
-				const response = await store.dispatch(
-					'tendermint.liquidity.v1beta1/QueryLiquidityPool',
-					{ params: { pool_id: poolId } }
-				)
-				data.result = response
-			} catch (e) {
-				data.error = e.message
-				data.result = null
-			} finally {
-				data.isLoading = false
-			}
-		}
-
-		const pool = computed(() => {
-			const result: any = data.result
-
-			if (!result) {
-				return
-			}
-
-			const name = result.pool.reserve_coin_denoms.join('-').toUpperCase()
-
-			return { name, ...result.pool }
-		})
-
-		onMounted(() => fetchPool())
+		const pool = findPoolById(poolId)
+		const walletPoolBalance = balanceByDenom(pool.value?.pool_coin_denom)
 
 		return {
 			updateBalances,
-			poolBalance,
+			walletPoolBalance,
+			poolId,
 			pool,
 			isLoggedIn,
-			isLoading: computed(() => data.isLoading),
-			error: computed(() => data.error)
+			isPending,
+			error
 		}
 	}
 })

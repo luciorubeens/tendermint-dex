@@ -1,1 +1,3 @@
-export * from "./Deposit.vue";
+import DepositForm from './DepositForm.vue'
+
+export default DepositForm

@@ -9,11 +9,11 @@ export default [
 	},
 	{
 		name: 'liquidity-pool',
-		path: '/liquidity/pool/:id',
+		path: '/liquidity/pools/:id',
 		component: Pool
 	},
 	{
-		path: '/liquidity/pools',
+		path: '/liquidity',
 		component: Pools
-	},
+	}
 ]

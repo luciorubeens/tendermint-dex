@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue'
+import { computed, ComputedRef, ref, unref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { usePromise } from './usePromise'
 import { useSupply } from './useSupply'
@@ -42,6 +42,8 @@ export function useLiquidityPools() {
 		})
 	})
 
+	const findPoolById = (id: string | ComputedRef<string>) => computed<any>(() => pools.value.find(item => item.id === unref(id)));
+
 	watch(isPending, () => (initialized.value = true))
 
 	watch(
@@ -58,6 +60,7 @@ export function useLiquidityPools() {
 		isFinished,
 		isPending,
 		error,
-		pools
+		pools,
+		findPoolById
 	}
 }

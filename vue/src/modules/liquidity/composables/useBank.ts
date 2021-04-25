@@ -11,7 +11,7 @@ export function useBank({ address }: { address: ComputedRef<string> }) {
 			})?.balances ?? []
 	)
 
-	const balanceByDenom = (denom: string) => computed(() => allBalances.value.find(item => item.denom === denom))?.value?.amount;
+	const balanceByDenom = (denom: string) => computed(() => allBalances.value.find(item => item.denom === denom)?.amount);
 
 	const updateBalances = () => {
 		if (address.value) {
