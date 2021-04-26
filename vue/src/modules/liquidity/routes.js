@@ -4,6 +4,7 @@ import Pool from './views/Pool'
 
 export default [
 	{
+		name: 'liquidity-create',
 		path: '/liquidity/pools/create',
 		component: CreatePool
 	},

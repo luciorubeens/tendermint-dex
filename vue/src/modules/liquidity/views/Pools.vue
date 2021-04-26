@@ -1,6 +1,9 @@
 <template>
 	<div class="container">
-		<h1>Pools</h1>
+		<div>
+			<h1>Pools</h1>
+			<router-link :to="{ name: 'liquidity-create' }">Create New</router-link>
+		</div>
 
 		<template v-if="isPending"> loading... </template>
 
@@ -23,7 +26,10 @@
 						<td>{{ pool.name }}</td>
 						<td>{{ pool.supplyAmount }}</td>
 						<td>
-							<router-link :to="{ name: 'liquidity-pool', params: { id: pool.id }}">Open</router-link>
+							<router-link
+								:to="{ name: 'liquidity-pool', params: { id: pool.id } }"
+								>Open</router-link
+							>
 						</td>
 					</tr>
 				</tbody>
@@ -33,13 +39,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { useLiquidityPools } from '../composables'
+import { defineComponent, onMounted } from 'vue'
+import { useLiquidityPools, useSupply } from '../composables'
 
 // TODO: Show loading and error state
 export default defineComponent({
 	setup() {
 		const { isPending, pools, error } = useLiquidityPools()
+		const { updateSupplies } = useSupply()
+
+		onMounted(updateSupplies)
 
 		return { isPending, pools, error }
 	}

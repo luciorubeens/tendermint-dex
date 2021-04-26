@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 export function useSupply() {
@@ -11,7 +11,10 @@ export function useSupply() {
 	const findSupplyByDenom = (denom: string) =>
 		tokenSupplies.value.supply.find((token) => token.denom === denom)?.amount
 
+	const updateSupplies = () => store.dispatch('cosmos.bank.v1beta1/QueryTotalSupply', { all: true });
+
 	return {
-		findSupplyByDenom
+		updateSupplies,
+		findSupplyByDenom,
 	}
 }

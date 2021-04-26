@@ -1,6 +1,6 @@
 import { ref, watch } from "vue"
 
-export function usePromise<T = any>(promise: () => Promise<T>, { immediate = true }: { immediate?: boolean }) {
+export function usePromise<T = any>(promise: () => Promise<T>, { immediate = true }: { immediate?: boolean } = {}) {
 	const isFinished = ref(false)
   const isPending = ref(false)
 	const error = ref<any>()
@@ -23,9 +23,11 @@ export function usePromise<T = any>(promise: () => Promise<T>, { immediate = tru
 		})
 	}
 
-	if (immediate) {
-		execute();
-	}
+	watch(promise, () => {
+		if (immediate) {
+			execute()
+		}
+	}, { immediate: true })
 
 	return {
 		isFinished,

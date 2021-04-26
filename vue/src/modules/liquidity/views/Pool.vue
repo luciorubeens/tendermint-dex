@@ -23,12 +23,17 @@
 
 				<div>
 					<h4>Deposit</h4>
-					<DepositForm :denoms="pool.reserve_coin_denoms" :poolId="pool.id" @success="updateBalances" />
+					<DepositForm :denoms="pool.reserve_coin_denoms" :pool-id="pool.id" @success="updateBalances" />
 				</div>
 
 				<div>
 					<h4>Withdraw</h4>
-					<WithdrawForm :poolId="pool.id" @success="updateBalances" />
+					<WithdrawForm :pool-id="pool.id" @success="updateBalances" />
+				</div>
+
+				<div>
+					<h4>Transactions</h4>
+					<TransactionTable :pool-id="pool.id" />
 				</div>
 			</div>
 		</div>
@@ -41,13 +46,15 @@ import { useRoute } from 'vue-router'
 import { useBank, useLiquidityPools, useWallet } from '../composables'
 import DepositForm from '../components/DepositForm'
 import WithdrawForm from '../components/WithdrawForm'
+import TransactionTable from '../components/TransactionTable'
 
 export default defineComponent({
 	name: 'Pool',
 
 	components: {
 		DepositForm,
-		WithdrawForm
+		WithdrawForm,
+		TransactionTable
 	},
 
 	setup() {
