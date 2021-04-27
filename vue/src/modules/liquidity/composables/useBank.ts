@@ -1,4 +1,4 @@
-import { computed, ComputedRef, onMounted, unref, watch } from 'vue'
+import { computed, ComputedRef, unref, watch } from 'vue'
 import { useStore } from 'vuex'
 
 export function useBank({ address }: { address: string | ComputedRef<string> }) {

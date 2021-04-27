@@ -7,7 +7,7 @@
 
 		<template v-if="isPending"> loading... </template>
 
-		<template v-if="error"></template>
+		<template v-if="error">{{ error }}</template>
 
 		<template v-else>
 			<table>
@@ -42,7 +42,6 @@
 import { defineComponent, onMounted } from 'vue'
 import { useLiquidityPools, useSupply } from '../composables'
 
-// TODO: Show loading and error state
 export default defineComponent({
 	setup() {
 		const { isPending, pools, error } = useLiquidityPools()

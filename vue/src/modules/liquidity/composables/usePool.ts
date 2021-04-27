@@ -1,7 +1,7 @@
-import { reactive, watch } from "vue";
+import { reactive } from "vue";
 import { useBank } from "./useBank";
 import { useLiquidityPools } from "./useLiquidityPools";
-import { useSupply } from "./useSupply";
+
 import BigNumber from "bignumber.js"
 
 export function usePool({ poolId }: { poolId: string}) {
@@ -30,19 +30,5 @@ export function usePool({ poolId }: { poolId: string}) {
 		}
 	}
 
-	// TODO: Remove, as it needs to calculate new deposits and could not get reserve balances based on height
-	const calculateSharesFromWithdrawTransactions = ({ transactionIndex, transactions }: { transactionIndex:number, transactions: any[] }) => {
-		const getWithdrawAmount = (transaction: any) => transaction.tx?.body?.messages?.[0]?.pool_coin?.amount
-
-		const supplyAtIndex = transactions.slice(0, transactionIndex).reduce((supply, transaction) => {
-			const amount = getWithdrawAmount(transaction)
-			return supply.minus(amount)
-		}, new BigNumber(1e6));
-
-		const withdrawAmount = getWithdrawAmount(transactions[transactionIndex])
-
-		return calculateShares({ amount: withdrawAmount, supplyAmount: supplyAtIndex })
-	}
-
-	return { pool, reserveBalances, calculateShares, calculateSharesFromWithdrawTransactions }
+	return { pool, reserveBalances, calculateShares }
 }

@@ -1,10 +1,16 @@
 <template>
-	<section>
-		<div>
-			<button type="button" @click="setActiveTab('swap')">Swap</button>
-			<button type="button" @click="setActiveTab('deposit')">Deposit</button>
-			<button type="button" @click="setActiveTab('withdraw')">
-				Withdraw
+	<section class="transaction-table">
+		<div class="transaction-table__nav">
+			<button
+				v-for="tab in tabs"
+				:key="tab"
+				:aria-selected="activeTab === tab"
+				role="tab"
+				class="transaction-table__nav__item"
+				type="button"
+				@click="setActiveTab(tab)"
+			>
+				{{ tab }}
 			</button>
 		</div>
 
@@ -21,7 +27,7 @@
 						<th>Action</th>
 						<th>Account</th>
 						<th>Token Amount</th>
-						<th>Token Amount</th>
+						<th v-if="activeTab === 'deposit'">Token Amount</th>
 						<th>Timestamp</th>
 					</tr>
 				</thead>
@@ -29,7 +35,7 @@
 				<tbody>
 					<tr v-for="transaction in transactions" :key="transaction">
 						<td>
-							{{ transaction.action}}
+							{{ transaction.action }}
 						</td>
 						<td>
 							{{ transaction.account }}
@@ -40,7 +46,7 @@
 								<span>{{ transaction.tokenA.denom }}</span>
 							</div>
 						</td>
-						<td>
+						<td v-if="activeTab === 'deposit' && transaction.tokenB">
 							<div>
 								<span>{{ transaction.tokenB.amount }}</span>
 								<span>{{ transaction.tokenB.denom }}</span>
@@ -62,8 +68,8 @@ import { usePool, useTransactions } from '../../composables'
 
 const tabActionMap = {
 	deposit: 'deposit_within_batch',
-	swap: 'swap_within_batch',
-	withdraw: 'withdraw_within_batch'
+	withdraw: 'withdraw_within_batch',
+	swap: 'swap_within_batch'
 }
 
 type TabActionType = keyof typeof tabActionMap
@@ -81,8 +87,9 @@ export default defineComponent({
 	setup(props) {
 		const activeTab = ref<TabActionType>('deposit')
 		const setActiveTab = (tabId: TabActionType) => (activeTab.value = tabId)
+		const tabs = computed(() => Object.keys(tabActionMap))
 
-		const { pool, calculateSharesFromWithdrawTransactions } = usePool({ poolId: props.poolId })
+		const { pool } = usePool({ poolId: props.poolId })
 
 		const query = computed(() => {
 			return {
@@ -92,11 +99,12 @@ export default defineComponent({
 
 		const { isPending, data, error } = useTransactions({ query })
 
-		const formatRow = (transaction: any, index: number) => {
+		const formatRow = (transaction: any) => {
 			const message = transaction.tx?.body?.messages?.[0]
 			const txType = message?.['@type']
 
 			const row: any = {
+				height: transaction.height,
 				timestamp: transaction.timestamp
 			}
 
@@ -108,12 +116,21 @@ export default defineComponent({
 			}
 
 			if (txType === '/tendermint.liquidity.v1beta1.MsgWithdrawWithinBatch') {
-				const shares = calculateSharesFromWithdrawTransactions({ transactionIndex: index, transactions: data.value.tx_responses })
-
 				row.action = 'Withdraw'
 				row.account = message?.withdrawer_address
-				row.tokenA = shares.tokenA
-				row.tokenB = shares.tokenB
+				row.tokenA = {
+					denom: pool.value.name,
+					amount: message?.pool_coin?.amount
+				}
+			}
+
+			if (txType === '/tendermint.liquidity.v1beta1.MsgSwapWithinBatch') {
+				row.action = 'Swap'
+				row.account = message?.swap_requester_address
+				row.tokenA = {
+					denom: message?.offer_coin?.denom,
+					amount: message?.offer_coin?.amount
+				}
 			}
 
 			return row
@@ -124,10 +141,13 @@ export default defineComponent({
 				return []
 			}
 
-			return data.value.tx_responses.map((tx: any, index: number) => formatRow(tx, index))
+			return data.value.tx_responses
+				.map((tx: any) => formatRow(tx))
+				.sort((a: any, b: any) => (+a.height < +b.height ? 1 : -1))
 		})
 
 		return {
+			tabs,
 			activeTab,
 			setActiveTab,
 			isPending,
@@ -137,3 +157,13 @@ export default defineComponent({
 	}
 })
 </script>
+
+<style scoped>
+.transaction-table__nav__item {
+	text-transform: capitalize;
+}
+
+.transaction-table__nav__item[aria-selected='true'] {
+	font-weight: 600;
+}
+</style>

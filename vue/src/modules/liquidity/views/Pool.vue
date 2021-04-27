@@ -22,13 +22,18 @@
 				</div>
 
 				<div>
+					<h4>Swap</h4>
+					<SwapForm :denoms="pool.reserve_coin_denoms" :pool-id="pool.id" @success="refresh" />
+				</div>
+
+				<div>
 					<h4>Deposit</h4>
-					<DepositForm :denoms="pool.reserve_coin_denoms" :pool-id="pool.id" @success="updateBalances" />
+					<DepositForm :denoms="pool.reserve_coin_denoms" :pool-id="pool.id" @success="refresh" />
 				</div>
 
 				<div>
 					<h4>Withdraw</h4>
-					<WithdrawForm :pool-id="pool.id" @success="updateBalances" />
+					<WithdrawForm :pool-id="pool.id" @success="refresh" />
 				</div>
 
 				<div>
@@ -41,12 +46,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useBank, useLiquidityPools, useWallet } from '../composables'
+import { useBank, useLiquidityPools, useSupply, useWallet } from '../composables'
+import { useRefreshController } from '../composables/useRefreshController'
+
 import DepositForm from '../components/DepositForm'
 import WithdrawForm from '../components/WithdrawForm'
 import TransactionTable from '../components/TransactionTable'
+import SwapForm from '../components/SwapForm'
 
 export default defineComponent({
 	name: 'Pool',
@@ -54,7 +62,8 @@ export default defineComponent({
 	components: {
 		DepositForm,
 		WithdrawForm,
-		TransactionTable
+		TransactionTable,
+		SwapForm
 	},
 
 	setup() {
@@ -63,13 +72,22 @@ export default defineComponent({
 		const { address, isLoggedIn } = useWallet()
 		const { balanceByDenom, updateBalances } = useBank({ address })
 		const { isPending, error, findPoolById } = useLiquidityPools()
+		const { signal, refresh } = useRefreshController()
+		const { updateSupplies } = useSupply()
 
 		const poolId = computed(() => route.params.id as string)
 
 		const pool = findPoolById(poolId)
 		const walletPoolBalance = balanceByDenom(pool.value?.pool_coin_denom)
 
+		watch(signal, () => {
+			console.log("pool signal")
+			updateBalances()
+			updateSupplies()
+		})
+
 		return {
+			refresh,
 			updateBalances,
 			walletPoolBalance,
 			poolId,

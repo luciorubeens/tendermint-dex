@@ -1,6 +1,7 @@
 import { computed, ComputedRef, unref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { usePromise } from './usePromise'
+import { useRefreshController } from './useRefreshController';
 
 export function useTransactions<T>({
 	query
@@ -8,6 +9,7 @@ export function useTransactions<T>({
 	query: Record<string, string> | ComputedRef<Record<string, string>>
 }) {
 	const store = useStore()
+	const { signal } = useRefreshController();
 
 	const eventParams = computed(() => {
 		const params = new URLSearchParams()
@@ -27,6 +29,8 @@ export function useTransactions<T>({
 		},
 		{ immediate: true }
 	)
+
+	watch(signal, promise.execute)
 
 	return promise
 }

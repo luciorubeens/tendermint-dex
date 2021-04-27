@@ -3,10 +3,18 @@ import init from './config'
 
 const store = createStore({
 	state() {
-		return {}
+		return {
+			refreshCount: 0
+		}
 	},
-	mutations: {},
-	actions: {}
+	mutations: {
+		INCREMENT_REFRESH: (state) => state.refreshCount++
+	},
+	actions: {
+		refresh ({ commit }) {
+			commit('INCREMENT_REFRESH')
+		}
+	}
 })
 init(store)
 export default store

@@ -66,6 +66,14 @@ export default defineComponent({
 					{ value, fee: deposit.fee }
 				)
 				console.log({ result })
+
+				if (result.code) {
+					throw new Error(result.rawLog)
+				}
+
+				pair.tokenA.amount = ''
+				pair.tokenB.amount = ''
+
 				emit('success')
 			} catch (e) {
 				console.error(e)

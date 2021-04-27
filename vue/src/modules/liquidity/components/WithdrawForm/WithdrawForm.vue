@@ -50,6 +50,7 @@ export default defineComponent({
 					'tendermint.liquidity.v1beta1/sendMsgWithdrawWithinBatch',
 					{ value }
 				)
+				poolCoin.amount = ''
 				console.log({ result })
 				emit('success')
 			} catch (e) {
