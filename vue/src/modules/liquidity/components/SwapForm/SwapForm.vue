@@ -18,7 +18,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
-import BigNumber from "bignumber.js"
+import BigNumber from 'bignumber.js'
 
 // TODO: Handle error state
 export default defineComponent({
@@ -70,9 +70,11 @@ export default defineComponent({
 				},
 				demandCoinDenom: pair.to.denom,
 				// TODO: Price from exchange
-				orderPrice: "190000000000000002",
+				orderPrice: '190000000000000002',
 				offerCoinFee: {
-					amount: new BigNumber(pair.from.amount).multipliedBy("0.0015").toFixed(0),
+					amount: new BigNumber(pair.from.amount)
+						.multipliedBy('0.0015')
+						.toFixed(0),
 					denom: pair.from.denom
 				}
 			}

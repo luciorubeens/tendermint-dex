@@ -8,7 +8,9 @@
 
 				<div class="sp-token-send__main sp-box sp-shadow">
 					<template v-if="!isLoggedIn">
-						<p class="create-pool__wallet-msg">Access a wallet to create a pool</p>
+						<p class="create-pool__wallet-msg">
+							Access a wallet to create a pool
+						</p>
 					</template>
 
 					<template v-else>
@@ -157,7 +159,7 @@ export default defineComponent({
 
 <style scoped>
 .create-pool__wallet-msg {
-	opacity: .4;
+	opacity: 0.4;
 }
 .create-pool__form__footer {
 	display: flex;

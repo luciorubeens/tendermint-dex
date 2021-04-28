@@ -1,6 +1,6 @@
 <template>
 	<div :class="['alert', `alert--${props.status}`]">
-		<p class='alert__content'>
+		<p class="alert__content">
 			{{ props.message }}
 		</p>
 	</div>
@@ -29,13 +29,13 @@ export default defineComponent({
 
 <style scoped>
 .alert {
-	border-radius: .375rem;
+	border-radius: 0.375rem;
 	padding: 1rem 2rem;
 }
 .alert--error {
-	background-color: #FEF2F2;
+	background-color: #fef2f2;
 }
 .alert--error .alert__content {
-	color: #B91C1C;
+	color: #b91c1c;
 }
 </style>

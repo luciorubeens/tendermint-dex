@@ -1,5 +1,5 @@
-import { computed, watch } from "vue";
-import { useStore } from "vuex";
+import { computed, watch } from 'vue'
+import { useStore } from 'vuex'
 
 export function useRefreshController() {
 	const store = useStore()

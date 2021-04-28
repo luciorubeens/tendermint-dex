@@ -34,20 +34,24 @@ export default defineComponent({
 	emits: ['change'],
 
 	setup(_, { emit }) {
-		const { address} = useWallet()
+		const { address } = useWallet()
 		const { allBalances } = useBank({ address })
 
-		const availableBalances = computed(() => allBalances.value.filter(item => !item.denom.toLowerCase().startsWith("pool")))
+		const availableBalances = computed(() =>
+			allBalances.value.filter(
+				(item) => !item.denom.toLowerCase().startsWith('pool')
+			)
+		)
 
 		const pair = reactive({
 			tokenA: {
-				amount: "",
+				amount: '',
 				denom: availableBalances.value[0]?.denom
 			},
 			tokenB: {
-				amount: "",
+				amount: '',
 				denom: availableBalances?.value[1]?.denom
-			},
+			}
 		})
 
 		const emitChange = () => {
@@ -58,8 +62,8 @@ export default defineComponent({
 
 		return {
 			pair,
-			availableBalances,
+			availableBalances
 		}
-	},
+	}
 })
 </script>

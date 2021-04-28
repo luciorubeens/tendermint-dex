@@ -11,7 +11,7 @@ const store = createStore({
 		INCREMENT_REFRESH: (state) => state.refreshCount++
 	},
 	actions: {
-		refresh ({ commit }) {
+		refresh({ commit }) {
 			commit('INCREMENT_REFRESH')
 		}
 	}

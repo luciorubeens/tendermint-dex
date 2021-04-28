@@ -1,3 +1,3 @@
-import TransactionTable from './TransactionTable.vue';
+import TransactionTable from './TransactionTable.vue'
 
-export default TransactionTable;
+export default TransactionTable

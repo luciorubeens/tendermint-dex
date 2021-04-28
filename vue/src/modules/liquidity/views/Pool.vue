@@ -18,17 +18,25 @@
 
 				<div v-if="isLoggedIn">
 					<h4>My Balances</h4>
-					{{walletPoolBalance}}
+					{{ walletPoolBalance }}
 				</div>
 
 				<div>
 					<h4>Swap</h4>
-					<SwapForm :denoms="pool.reserve_coin_denoms" :pool-id="pool.id" @success="refresh" />
+					<SwapForm
+						:denoms="pool.reserve_coin_denoms"
+						:pool-id="pool.id"
+						@success="refresh"
+					/>
 				</div>
 
 				<div>
 					<h4>Deposit</h4>
-					<DepositForm :denoms="pool.reserve_coin_denoms" :pool-id="pool.id" @success="refresh" />
+					<DepositForm
+						:denoms="pool.reserve_coin_denoms"
+						:pool-id="pool.id"
+						@success="refresh"
+					/>
 				</div>
 
 				<div>
@@ -48,7 +56,12 @@
 <script lang="ts">
 import { defineComponent, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useBank, useLiquidityPools, useSupply, useWallet } from '../composables'
+import {
+	useBank,
+	useLiquidityPools,
+	useSupply,
+	useWallet
+} from '../composables'
 import { useRefreshController } from '../composables/useRefreshController'
 
 import DepositForm from '../components/DepositForm'
@@ -81,7 +94,6 @@ export default defineComponent({
 		const walletPoolBalance = balanceByDenom(pool.value?.pool_coin_denom)
 
 		watch(signal, () => {
-			console.log("pool signal")
 			updateBalances()
 			updateSupplies()
 		})

@@ -4,7 +4,7 @@ export interface Coin {
 }
 
 export interface TokenPair {
-	tokenA: Coin,
+	tokenA: Coin
 	tokenB: Coin
 }
 
