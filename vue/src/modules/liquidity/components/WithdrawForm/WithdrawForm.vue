@@ -15,7 +15,7 @@ import { useStore } from 'vuex'
 import { useBank, useLiquidityPools, useWallet } from '../../composables'
 
 export default defineComponent({
-	name: 'WhitdrawForm',
+	name: 'WithdrawForm',
 	props: {
 		poolId: {
 			type: String,

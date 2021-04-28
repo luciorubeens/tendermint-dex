@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<div>
-			<h1>Pools</h1>
+			<h1>Available pool pairs</h1>
 			<router-link :to="{ name: 'liquidity-create' }">Create New</router-link>
 		</div>
 

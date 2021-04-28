@@ -1,1 +1,9 @@
 //Your custom styles here
+.sp-button {
+	display: flex;
+	align-items: center;
+}
+
+.sp-button .spinner {
+	margin-right: .75rem;
+}

@@ -23,7 +23,7 @@ export function usePromise<T = any>(promise: () => Promise<T>, { immediate = tru
 		})
 	}
 
-	watch(promise, () => {
+	watch(() => promise, () => {
 		if (immediate) {
 			execute()
 		}

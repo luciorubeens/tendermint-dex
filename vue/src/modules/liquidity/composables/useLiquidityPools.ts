@@ -43,6 +43,7 @@ export function useLiquidityPools() {
 	})
 
 	const findPoolById = (id: string | ComputedRef<string>) => computed<any>(() => pools.value.find(item => item.id === unref(id)));
+	const findPoolByDenoms = (denoms: string[]) => pools.value.find(item => item.reserve_coin_denoms.sort().join() === denoms.sort().join())
 
 	watch(isPending, () => (initialized.value = true))
 
@@ -61,6 +62,7 @@ export function useLiquidityPools() {
 		isPending,
 		error,
 		pools,
-		findPoolById
+		findPoolById,
+		findPoolByDenoms
 	}
 }
