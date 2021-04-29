@@ -1,5 +1,5 @@
 <template>
-	<form @submit.prevent="submit">
+	<form @submit.prevent="">
 		<fieldset>
 			<input v-model="deposit.pair.tokenA.amount" name="token-a-amount" />
 			<span>{{ deposit.pair.tokenA.denom }}</span>
@@ -10,7 +10,7 @@
 			<span>{{ deposit.pair.tokenB.denom }}</span>
 		</fieldset>
 
-		<button>Deposit</button>
+		<SpButton @click="submit">Deposit</SpButton>
 	</form>
 </template>
 

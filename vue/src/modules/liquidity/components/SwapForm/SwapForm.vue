@@ -1,5 +1,5 @@
 <template>
-	<form @submit.prevent="submit">
+	<form @submit.prevent="">
 		<fieldset>
 			<input v-model="pair.from.amount" name="token-from" />
 			<span>{{ pair.from.denom }}</span>
@@ -11,7 +11,7 @@
 		</fieldset>
 
 		<button type="button" @click="switchTokens">Switch Tokens</button>
-		<button>Swap</button>
+		<SpButton @click="submit">Swap</SpButton>
 	</form>
 </template>
 

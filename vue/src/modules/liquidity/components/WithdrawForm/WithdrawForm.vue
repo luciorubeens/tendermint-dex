@@ -1,11 +1,11 @@
 <template>
-	<form @submit.prevent="submit">
+	<form @submit.prevent="">
 		<fieldset>
 			<input v-model="poolCoin.amount" name="token-amount" />
-			<span>{{ pool.name }}</span>
+			<span>{{ pool.meta.name }}</span>
 		</fieldset>
 
-		<button>Withdraw</button>
+		<SpButton @click="submit">Withdraw</SpButton>
 	</form>
 </template>
 

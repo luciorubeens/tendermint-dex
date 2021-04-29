@@ -1,52 +1,71 @@
 <template>
 	<div class="container">
-		<div v-if="isPending">
-			<span>Loading...</span>
-		</div>
+		<div class="pool__holder">
+			<div class="pool__wrapper">
+				<div class="pool__wrapper__container">
+					<div class="sp-component-title">
+						<h3>Pair {{ pool.meta.name }}</h3>
+					</div>
 
-		<div v-else-if="error">
-			<span>{{ error }}</span>
-		</div>
+					<div class="pool__stats sp-box sp-shadow">
+						<div v-if="isLoggedIn">
+							<h4>My Balances</h4>
+							{{ walletPoolBalance }}
+						</div>
+						Stats
+					</div>
 
-		<div v-else-if="!pool">
-			<span>Failed to find the pool #{{ poolId }}</span>
-		</div>
+					<div class="pool__transactions">
+						<div class="sp-component-title">
+							<h3>Transactions</h3>
+							<span>|</span>
+							<span>A list of recent transactions</span>
+						</div>
 
-		<div v-else>
-			<div>
-				<h1>Pair {{ pool.name }}</h1>
-
-				<div v-if="isLoggedIn">
-					<h4>My Balances</h4>
-					{{ walletPoolBalance }}
+						<div class="sp-box sp-shadow">
+							<TransactionTable :pool-id="pool.id" />
+						</div>
+					</div>
 				</div>
 
-				<div>
-					<h4>Swap</h4>
-					<SwapForm
-						:denoms="pool.reserve_coin_denoms"
-						:pool-id="pool.id"
-						@success="refresh"
-					/>
-				</div>
+				<div class="pool__wrapper__actions">
+					<div class="pool__swap">
+						<div class="sp-component-title">
+							<h3>Swap</h3>
+						</div>
 
-				<div>
-					<h4>Deposit</h4>
-					<DepositForm
-						:denoms="pool.reserve_coin_denoms"
-						:pool-id="pool.id"
-						@success="refresh"
-					/>
-				</div>
+						<div class="sp-box sp-shadow">
+							<SwapForm
+								:denoms="pool.reserve_coin_denoms"
+								:pool-id="pool.id"
+								@success="refresh"
+							/>
+						</div>
+					</div>
 
-				<div>
-					<h4>Withdraw</h4>
-					<WithdrawForm :pool-id="pool.id" @success="refresh" />
-				</div>
+					<div class="pool__deposit">
+						<div class="sp-component-title">
+							<h3>Deposit</h3>
+						</div>
 
-				<div>
-					<h4>Transactions</h4>
-					<TransactionTable :pool-id="pool.id" />
+						<div class="sp-box sp-shadow">
+							<DepositForm
+								:denoms="pool.reserve_coin_denoms"
+								:pool-id="pool.id"
+								@success="refresh"
+							/>
+						</div>
+					</div>
+
+					<div class="pool__withdraw">
+						<div class="sp-component-title">
+							<h3>Withdraw</h3>
+						</div>
+
+						<div class="sp-box sp-shadow">
+							<WithdrawForm :pool-id="pool.id" @success="refresh" />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -54,7 +73,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch } from 'vue'
+import { defineComponent, computed, watch, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import {
 	useBank,
@@ -81,6 +100,8 @@ export default defineComponent({
 
 	setup() {
 		const route = useRoute()
+		const activeTab = ref<string>('deposit')
+		const setActiveTab = (tab: string) => (activeTab.value = tab)
 
 		const { address, isLoggedIn } = useWallet()
 		const { balanceByDenom, updateBalances } = useBank({ address })
@@ -99,6 +120,8 @@ export default defineComponent({
 		})
 
 		return {
+			activeTab,
+			setActiveTab,
 			refresh,
 			updateBalances,
 			walletPoolBalance,
@@ -111,3 +134,24 @@ export default defineComponent({
 	}
 })
 </script>
+
+<style scoped>
+.pool__wrapper {
+	display: flex;
+}
+.pool__wrapper__container {
+	flex: 1 1 0%;
+	margin-right: 4rem;
+}
+.pool__transactions {
+	margin-top: 2rem;
+}
+
+.pool__deposit {
+	margin-top: 2rem;
+}
+
+.pool__withdraw {
+	margin-top: 2rem;
+}
+</style>

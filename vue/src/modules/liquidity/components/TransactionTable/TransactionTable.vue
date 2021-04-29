@@ -14,20 +14,29 @@
 			</button>
 		</div>
 
-		<template v-if="isPending"> loading... </template>
+		<template v-if="isPending"> Loading... </template>
 
-		<template v-if="error">
+		<template v-else-if="error">
 			{{ error }}
 		</template>
 
 		<template v-else>
-			<table>
+			<p class="transaction-table__empty-msg" v-if="!transactions.length">
+				No {{ activeTab }} transactions found.
+			</p>
+
+			<table v-else class="transaction-table__table">
 				<thead>
 					<tr>
 						<th>Action</th>
 						<th>Account</th>
-						<th>Token Amount</th>
-						<th v-if="activeTab === 'deposit'">Token Amount</th>
+						<th class="transation-table__table__token">Token Amount</th>
+						<th
+							v-if="activeTab === 'deposit'"
+							class="transation-table__table__token"
+						>
+							Token Amount
+						</th>
 						<th>Timestamp</th>
 					</tr>
 				</thead>
@@ -40,19 +49,22 @@
 						<td>
 							{{ transaction.account }}
 						</td>
-						<td>
+						<td class="transation-table__table__token">
 							<div>
 								<span>{{ transaction.tokenA.amount }}</span>
 								<span>{{ transaction.tokenA.denom }}</span>
 							</div>
 						</td>
-						<td v-if="activeTab === 'deposit' && transaction.tokenB">
+						<td
+							v-if="activeTab === 'deposit' && transaction.tokenB"
+							class="transation-table__table__token"
+						>
 							<div>
 								<span>{{ transaction.tokenB.amount }}</span>
 								<span>{{ transaction.tokenB.denom }}</span>
 							</div>
 						</td>
-						<td>
+						<td class="transation-table__table__timestamp">
 							{{ transaction.timestamp }}
 						</td>
 					</tr>
@@ -65,6 +77,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { usePool, useTransactions } from '../../composables'
+import dayjs from 'dayjs'
 
 const tabActionMap = {
 	deposit: 'deposit_within_batch',
@@ -105,7 +118,7 @@ export default defineComponent({
 
 			const row: any = {
 				height: transaction.height,
-				timestamp: transaction.timestamp
+				timestamp: dayjs(transaction.timestamp).format('D MMM, YYYY h:mm A')
 			}
 
 			if (txType === '/tendermint.liquidity.v1beta1.MsgDepositWithinBatch') {
@@ -159,11 +172,51 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.transaction-table__nav {
+	margin-bottom: 2rem;
+}
+
 .transaction-table__nav__item {
 	text-transform: capitalize;
+	appearance: none;
+	border-radius: 0.375rem;
+	padding: 0.75rem 1rem;
+	border: 0;
+	background: #f9fafb;
+	margin-left: 0.5rem;
+	cursor: pointer;
+}
+
+.transaction-table__nav__item:first-child {
+	margin-left: 0;
 }
 
 .transaction-table__nav__item[aria-selected='true'] {
 	font-weight: 600;
+	background: #f3f4f6;
+}
+
+.transaction-table__table {
+	width: 100%;
+}
+
+.transaction-table__table th {
+	opacity: 0.5;
+	padding-bottom: 1rem;
+	vertical-align: middle;
+	text-transform: uppercase;
+}
+
+.transaction-table__table td {
+	padding: 0.5rem 0;
+	vertical-align: middle;
+}
+
+.transation-table__table__token {
+	text-align: right;
+}
+
+.transation-table__table__timestamp {
+	text-align: center;
 }
 </style>
