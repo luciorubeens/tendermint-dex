@@ -32,7 +32,7 @@ jobs:
         run: npm install
 
       - name: Publish
-        uses: netlify/actions/build@main
+        uses: netlify/actions/build@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NETLIFY_CMD: npm build
