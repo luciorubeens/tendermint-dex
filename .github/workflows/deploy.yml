@@ -31,9 +31,13 @@ jobs:
       - name: Install
         run: npm install
 
-      - name: Publish
-        uses: netlify/actions/build@master
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NETLIFY_CMD: npm build
-          NETLIFY_DIR: dist
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        with:
+          args: deploy --dir=dist --prod
+
