@@ -5,7 +5,7 @@ describe('View Pools List', () => {
 
 	it('should navigate to pools by sidebar', () => {
 		cy.visit('/')
-		cy.get('.sp-sidebar .sp-link-icon').eq(3).contains('Liquidity').click()
+		cy.get('.sp-sidebar .sp-link-icon').eq(3).contains('Liquidity').click({force: true})
 		cy.get('.pools__holder').should('be.visible')
 	})
 
