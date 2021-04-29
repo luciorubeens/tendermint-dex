@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js'
 type Props = { poolId: string }
 
 export function usePool({ poolId }: Props) {
-	const { findPoolById } = useLiquidityPools()
+	const { findPoolById, isPending, error } = useLiquidityPools()
 	const pool = findPoolById(poolId)
 
 	const { allBalances } = useBank({
@@ -49,5 +49,5 @@ export function usePool({ poolId }: Props) {
 		}
 	}
 
-	return { pool, reserveBalances, calculateShares }
+	return { isPending, error, pool, reserveBalances, calculateShares }
 }
