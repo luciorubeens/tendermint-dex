@@ -3,7 +3,7 @@ accounts:
   - name: alice
     coins: ["10000000000uatom", "500000000000uusd", "10000000000stake"]
   - name: bob
-    coins: ["10000000000uatom", "100000000000uusd", "10000stake"]
+    coins: ["100000000000uusd", "10000stake"]
 validator:
   name: alice
   staked: "1000000000stake"

@@ -91,7 +91,7 @@ export default defineComponent({
 		const poolId = computed(() => route.params.id as string)
 
 		const pool = findPoolById(poolId)
-		const walletPoolBalance = balanceByDenom(pool.value?.pool_coin_denom)
+		const walletPoolBalance = balanceByDenom(pool.value!.pool_coin_denom)
 
 		watch(signal, () => {
 			updateBalances()

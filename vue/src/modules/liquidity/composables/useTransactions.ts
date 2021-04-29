@@ -2,12 +2,13 @@ import { computed, ComputedRef, unref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { usePromise } from './usePromise'
 import { useRefreshController } from './useRefreshController'
+import { Transactions } from '../interfaces'
 
-export function useTransactions<T>({
-	query
-}: {
+type Props = {
 	query: Record<string, string> | ComputedRef<Record<string, string>>
-}) {
+}
+
+export function useTransactions({ query }: Props) {
 	const store = useStore()
 	const { signal } = useRefreshController()
 
@@ -19,18 +20,17 @@ export function useTransactions<T>({
 		return encodeURIComponent(params.toString())
 	})
 
-	const promise = usePromise(
-		async () => {
-			await store.dispatch('common/transfers/ServiceGetTxsEvent', {
-				subscribe: false,
-				event: eventParams.value
-			})
-			return store.getters['common/transfers/getGetTxsEvent']({
-				event: eventParams.value
-			})
-		},
-		{ immediate: true }
-	)
+	const fetchTransactions = async (): Promise<Transactions> => {
+		await store.dispatch('common/transfers/ServiceGetTxsEvent', {
+			subscribe: false,
+			event: eventParams.value
+		})
+		return store.getters['common/transfers/getGetTxsEvent']({
+			event: eventParams.value
+		})
+	}
+
+	const promise = usePromise(fetchTransactions)
 
 	watch(signal, promise.execute)
 

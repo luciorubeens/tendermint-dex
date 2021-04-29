@@ -23,18 +23,13 @@
 							<InputTokenPair @change="setPair" />
 
 							<div class="create-pool__form__footer">
-								<button
+								<SpButton
 									class="sp-button sp-button-primary create-pool__form__submit"
 									:disabled="isPending"
+									:busy="isPending"
 								>
-									<template v-if="isPending">
-										<Spinner />
-										<span>Processing...</span>
-									</template>
-									<template v-else>
-										<span>Create Pool</span>
-									</template>
-								</button>
+									Create Pool
+								</SpButton>
 							</div>
 						</form>
 					</template>
@@ -52,7 +47,6 @@ import { BigNumber } from 'bignumber.js'
 
 import Alert from '../components/Alert'
 import InputTokenPair from '../components/InputTokenPair'
-import Spinner from '../components/Spinner'
 
 import {
 	usePromise,
@@ -61,13 +55,12 @@ import {
 	useWallet
 } from '../composables'
 
-import { TokenPair } from '../types'
+import { RawTransactionResponse, TokenPair } from '../interfaces'
 
 export default defineComponent({
 	components: {
-		InputTokenPair,
 		Alert,
-		Spinner
+		InputTokenPair,
 	},
 
 	setup() {
@@ -97,7 +90,7 @@ export default defineComponent({
 			const value = { poolCreatorAddress, poolTypeId, depositCoins }
 			const fee = pool.fee
 
-			const result = await store.dispatch(
+			const result: RawTransactionResponse = await store.dispatch(
 				'tendermint.liquidity.v1beta1/sendMsgCreatePool',
 				{ value, fee }
 			)
@@ -115,7 +108,7 @@ export default defineComponent({
 			isFinished,
 			data: result,
 			execute: submit
-		} = usePromise(submitFn, { immediate: false })
+		} = usePromise(submitFn, { lazy: true })
 
 		const validate = () => {
 			const minDepositAmount = new BigNumber(

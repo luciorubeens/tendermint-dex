@@ -1,5 +1,6 @@
 import { computed, ComputedRef, ref, unref, watch } from 'vue'
 import { useStore } from 'vuex'
+import { PoolWithMeta, QueryLiquidityPoolsResponse } from '../interfaces'
 import { usePromise } from './usePromise'
 import { useSupply } from './useSupply'
 
@@ -9,20 +10,19 @@ export function useLiquidityPools() {
 	const store = useStore()
 	const { findSupplyByDenom } = useSupply()
 
-	const initialized = ref(false)
+	const fetchLiquidityPools = () => {
+		return store.dispatch('tendermint.liquidity.v1beta1/QueryLiquidityPools', {
+			all: true
+		})
+	}
 
-	const { isPending, isFinished, error, execute } = usePromise(
-		() =>
-			store.dispatch('tendermint.liquidity.v1beta1/QueryLiquidityPools', {
-				all: true
-			}),
-		{
-			immediate: false
-		}
-	)
+	const promise = usePromise(fetchLiquidityPools)
 
-	const pools = computed(() => {
-		const poolsData: { pools: any[] } = store.getters[
+	/*
+	 * Format pools response to include utilities fields like `name` and `supplyAmount`
+	 */
+	const pools = computed<PoolWithMeta[]>(() => {
+		const poolsData: QueryLiquidityPoolsResponse = store.getters[
 			'tendermint.liquidity.v1beta1/getLiquidityPools'
 		]()
 
@@ -35,36 +35,26 @@ export function useLiquidityPools() {
 			const name = formatPoolName(pool.reserve_coin_denoms)
 
 			return {
-				name,
-				supplyAmount,
+				meta: {
+					name,
+					supplyAmount
+				},
 				...pool
 			}
 		})
 	})
 
 	const findPoolById = (id: string | ComputedRef<string>) =>
-		computed<any>(() => pools.value.find((item) => item.id === unref(id)))
+		computed(() => pools.value.find((item) => item.id === unref(id)))
+
+
 	const findPoolByDenoms = (denoms: string[]) =>
 		pools.value.find(
 			(item) => item.reserve_coin_denoms.sort().join() === denoms.sort().join()
 		)
 
-	watch(isPending, () => (initialized.value = true))
-
-	watch(
-		pools,
-		() => {
-			if (!pools.value.length && !initialized.value) {
-				execute()
-			}
-		},
-		{ immediate: true }
-	)
-
 	return {
-		isFinished,
-		isPending,
-		error,
+		...promise,
 		pools,
 		findPoolById,
 		findPoolByDenoms

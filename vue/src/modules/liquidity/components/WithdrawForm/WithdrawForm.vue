@@ -31,11 +31,11 @@ export default defineComponent({
 
 		const pool = findPoolById(props.poolId)
 
-		const walletPoolBalance = balanceByDenom(pool.value?.pool_coin_denom)
+		const walletPoolBalance = balanceByDenom(pool.value!.pool_coin_denom)
 
 		const poolCoin = reactive({
 			amount: '',
-			denom: pool.value.pool_coin_denom
+			denom: pool.value!.pool_coin_denom
 		})
 
 		const submit = async () => {

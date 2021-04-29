@@ -4,13 +4,14 @@ import { useLiquidityPools } from './useLiquidityPools'
 
 import BigNumber from 'bignumber.js'
 
-export function usePool({ poolId }: { poolId: string }) {
-	const { findPoolById } = useLiquidityPools()
+type Props = { poolId: string }
 
+export function usePool({ poolId }: Props) {
+	const { findPoolById } = useLiquidityPools()
 	const pool = findPoolById(poolId)
 
 	const { allBalances } = useBank({
-		address: pool.value.reserve_account_address
+		address: pool.value?.reserve_account_address || ''
 	})
 
 	const reserveBalances = reactive({
@@ -31,19 +32,20 @@ export function usePool({ poolId }: { poolId: string }) {
 		}
 
 		const sharesPercentage = new BigNumber(amount).dividedBy(
-			supplyAmount ?? pool.value.supplyAmount
+			supplyAmount || pool.value?.meta.supplyAmount || 0
 		)
 
 		result.tokenA.amount = sharesPercentage
 			.multipliedBy(reserveBalances.tokenA.amount)
 			.toString()
+
 		result.tokenB.amount = sharesPercentage
 			.multipliedBy(reserveBalances.tokenB.amount)
 			.toString()
 
 		return {
 			...result,
-			sharesPercentage: sharesPercentage.decimalPlaces(4).toString()
+			sharesPercentage: sharesPercentage.toString()
 		}
 	}
 

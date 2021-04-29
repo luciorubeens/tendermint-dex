@@ -1,10 +1,11 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { QueryBankSupplyResponse } from '../interfaces'
 
 export function useSupply() {
 	const store = useStore()
 
-	const tokenSupplies = computed<{ supply: any[] }>(() =>
+	const tokenSupplies = computed<QueryBankSupplyResponse>(() =>
 		store.getters['cosmos.bank.v1beta1/getTotalSupply']()
 	)
 

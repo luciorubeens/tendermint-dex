@@ -1,5 +1,6 @@
 import { computed, ComputedRef, unref, watch } from 'vue'
 import { useStore } from 'vuex'
+import { Coin } from '../interfaces'
 
 export function useBank({
 	address
@@ -8,7 +9,7 @@ export function useBank({
 }) {
 	const store = useStore()
 
-	const allBalances = computed<{ denom: string; amount: string }[]>(
+	const allBalances = computed<Coin[]>(
 		() =>
 			store.getters['cosmos.bank.v1beta1/getAllBalances']({
 				params: { address: unref(address) }

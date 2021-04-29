@@ -93,7 +93,7 @@ export default defineComponent({
 
 		const query = computed(() => {
 			return {
-				[`${tabActionMap[activeTab.value]}.pool_id`]: pool.value.id
+				[`${tabActionMap[activeTab.value]}.pool_id`]: pool.value!.id
 			}
 		})
 
@@ -119,7 +119,7 @@ export default defineComponent({
 				row.action = 'Withdraw'
 				row.account = message?.withdrawer_address
 				row.tokenA = {
-					denom: pool.value.name,
+					denom: pool.value!.meta.name,
 					amount: message?.pool_coin?.amount
 				}
 			}
