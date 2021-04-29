@@ -10,9 +10,8 @@ export function useLiquidityParams() {
 		() => store.getters['tendermint.liquidity.v1beta1/getParams']()?.params
 	)
 
-	const { isPending, execute } = usePromise(
-		() =>
-			store.dispatch('tendermint.liquidity.v1beta1/QueryParams', { all: true }),
+	const { isPending, execute } = usePromise(() =>
+		store.dispatch('tendermint.liquidity.v1beta1/QueryParams', { all: true })
 	)
 
 	return {

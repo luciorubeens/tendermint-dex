@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch } from 'vue'
+import { computed, defineComponent, reactive, watch } from 'vue'
 import { useBank, useWallet } from '../../composables'
 
 export default defineComponent({

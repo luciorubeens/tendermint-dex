@@ -17,16 +17,18 @@
 						<Alert v-if="isFinished && error" status="error" :message="error" />
 
 						<form
-							@submit.prevent="submit"
+							@submit.prevent=""
 							class="sp-token-send__main__form create-pool__form"
 						>
 							<InputTokenPair @change="setPair" />
 
 							<div class="create-pool__form__footer">
 								<SpButton
-									class="sp-button sp-button-primary create-pool__form__submit"
+									type="submit"
+									class="create-pool__form__submit"
 									:disabled="isPending"
 									:busy="isPending"
+									@click="submit"
 								>
 									Create Pool
 								</SpButton>
@@ -60,7 +62,7 @@ import { RawTransactionResponse, TokenPair } from '../interfaces'
 export default defineComponent({
 	components: {
 		Alert,
-		InputTokenPair,
+		InputTokenPair
 	},
 
 	setup() {

@@ -1,6 +1,6 @@
 import { ref, watch } from 'vue'
 
-type OptionsProps = { lazy?: boolean, once?: boolean }
+type OptionsProps = { lazy?: boolean; once?: boolean }
 
 export function usePromise<T = any>(
 	promise: () => Promise<T>,
@@ -13,7 +13,7 @@ export function usePromise<T = any>(
 	const data = ref<T | undefined>()
 
 	const execute = () => {
-		hasExecuted.value = true;
+		hasExecuted.value = true
 		isPending.value = true
 		isFinished.value = false
 		error.value = undefined
@@ -35,11 +35,11 @@ export function usePromise<T = any>(
 		() => promise,
 		() => {
 			if (options?.lazy) {
-				return;
+				return
 			}
 
 			if (options?.once && hasExecuted.value) {
-				return;
+				return
 			}
 
 			execute()
