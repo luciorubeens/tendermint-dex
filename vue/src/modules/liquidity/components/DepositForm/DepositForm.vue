@@ -45,7 +45,6 @@ import { useBank, useLiquidityParams, usePromise, useWallet } from '../../compos
 import { PlusIcon } from '../Icons'
 import Alert from '../Alert/Alert.vue'
 
-// TODO: Handle error state
 export default defineComponent({
 	name: 'DepositForm',
 

@@ -61,7 +61,6 @@ import BigNumber from 'bignumber.js'
 import { SwitchIcon } from '../Icons'
 import Alert from '../Alert/Alert.vue'
 
-// TODO: Handle error state
 export default defineComponent({
 	components: { SwitchIcon, Alert },
 	name: 'SwapForm',
