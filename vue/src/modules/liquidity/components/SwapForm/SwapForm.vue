@@ -27,7 +27,7 @@
 			</div>
 		</fieldset>
 
-		<div class="swap__details">
+		<div v-if="pair.from.amount" class="swap__details">
 			<div class="swap__details__item">
 				<span>Price</span>
 				<span
@@ -40,7 +40,7 @@
 			</div>
 		</div>
 
-		<SpButton :disabled="isPending" :busy="isPending" @click="execute">
+		<SpButton :disabled="isPending" :busy="isPending" @click="execute" class="swap-form__submit">
 			{{ isLoggedIn ? 'Swap' : 'Unlock your wallet' }}
 		</SpButton>
 	</form>
@@ -58,7 +58,7 @@ import {
 } from '../../composables'
 
 import BigNumber from 'bignumber.js'
-import SwitchIcon from '../Icons/SwitchIcon.vue'
+import { SwitchIcon } from '../Icons'
 import Alert from '../Alert/Alert.vue'
 
 // TODO: Handle error state
@@ -275,6 +275,7 @@ export default defineComponent({
 	color: #111;
 	padding: 0.9rem 1.2rem;
 	border: none;
+	background: transparent;
 }
 .swap__input-wrapper span {
 	text-transform: uppercase;
@@ -285,7 +286,7 @@ export default defineComponent({
 }
 .swap__details {
 	border-radius: 0.2rem;
-	margin: 1rem 0;
+	margin-top: 1rem;
 	display: flex;
 	flex-direction: column;
 	padding: 1rem;
@@ -309,5 +310,11 @@ export default defineComponent({
 }
 .swap-form__label-wrapper span {
 	opacity: 0.8;
+}
+.swap-form__submit {
+	margin-top: 2rem;
+}
+.swap-form__buy .swap__input-wrapper {
+	background: #f9fafb;
 }
 </style>

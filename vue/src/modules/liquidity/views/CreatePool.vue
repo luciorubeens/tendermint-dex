@@ -80,7 +80,7 @@ export default defineComponent({
 			fee:	[
 				{
 					// TODO: hard coded as this appears to be necessary to transmit transactions on the Gravity DEX Testnet
-					amount: '200',
+					amount: '0',
 					denom: liquidityParams.value?.pool_creation_fee[0].denom
 				}
 			]
