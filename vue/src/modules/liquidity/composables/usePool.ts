@@ -29,7 +29,7 @@ export function usePool({ poolId }: Props) {
 		supplyAmount
 	}: {
 		amount: string
-		supplyAmount: string
+		supplyAmount?: string
 	}) => {
 		if (!allBalances.value.length) {
 			return undefined
@@ -55,7 +55,7 @@ export function usePool({ poolId }: Props) {
 
 		return {
 			...result,
-			sharesPercentage: sharesPercentage.toString()
+			percentage: sharesPercentage.toString()
 		}
 	}
 

@@ -6,7 +6,7 @@
 			<div class="swap-form__label-wrapper">
 				<label>Sell</label>
 				<span
-					>Available: {{ !isLoggedIn ? '--' : walletBalance.from.amount }}</span
+					>Available: {{ !isLoggedIn ? '--' : walletBalance.from.amount || "0" }}</span
 				>
 			</div>
 			<div class="swap__input-wrapper">
@@ -40,7 +40,7 @@
 			</div>
 		</div>
 
-		<SpButton :disabled="isPending" :busy="isPending" @click="execute" class="swap-form__submit">
+		<SpButton :disabled="isPending || !isLoggedIn" :busy="isPending" @click="execute" class="swap-form__submit">
 			{{ isLoggedIn ? 'Swap' : 'Unlock your wallet' }}
 		</SpButton>
 	</form>
@@ -105,7 +105,7 @@ export default defineComponent({
 			}
 		})
 
-		const walletBalance = reactive({
+		const walletBalance = computed(() => ({
 			from: {
 				denom: pair.from.denom,
 				amount: balanceByDenom(pair.from.denom as string).value || '0'
@@ -114,7 +114,7 @@ export default defineComponent({
 				denom: pair.to.denom,
 				amount: balanceByDenom(pair.to.denom as string).value || '0'
 			}
-		})
+		}))
 
 		const poolReserveBalance = computed(() => ({
 			from: reserveBalances.value?.[pair.from.denom as string],
@@ -207,7 +207,7 @@ export default defineComponent({
 					fee: fee.value
 				}
 			)
-			console.log({ result })
+			console.log({ swapResult: result })
 
 			if (result.code) {
 				throw new Error(result.rawLog)

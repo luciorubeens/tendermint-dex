@@ -25,7 +25,7 @@ export function useBank({
 		if (unref(address)) {
 			store.dispatch('cosmos.bank.v1beta1/QueryAllBalances', {
 				params: { address: unref(address) },
-				options: { all: true, subscribe: false }
+				options: { all: true, subscribe: true }
 			})
 		}
 	}

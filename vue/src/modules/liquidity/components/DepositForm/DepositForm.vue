@@ -6,7 +6,7 @@
 			<div class="deposit-form__label-wrapper">
 				<label>Input</label>
 				<span
-					>Available: {{ !isLoggedIn ? '--' : walletBalance.from.amount }}</span
+					>Available: {{ !isLoggedIn ? '--' : walletBalance.from.amount || "0" }}</span
 				>
 			</div>
 			<div class="deposit-form__input-wrapper">
@@ -23,7 +23,7 @@
 			<div class="deposit-form__label-wrapper">
 				<label>Input</label>
 				<span
-					>Available: {{ !isLoggedIn ? '--' : walletBalance.to.amount }}</span
+					>Available: {{ !isLoggedIn ? '--' : walletBalance.to.amount || "" }}</span
 				>
 			</div>
 			<div class="deposit-form__input-wrapper">
@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { computed, defineComponent, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useBank, useLiquidityParams, usePromise, useWallet } from '../../composables'
 import { PlusIcon } from '../Icons'
@@ -95,7 +95,7 @@ export default defineComponent({
 			]
 		})
 
-		const walletBalance = reactive({
+		const walletBalance = computed(() => ({
 			from: {
 				denom: pair.tokenA.denom,
 				amount: balanceByDenom(pair.tokenA.denom as string).value || '0'
@@ -104,7 +104,7 @@ export default defineComponent({
 				denom: pair.tokenB.denom,
 				amount: balanceByDenom(pair.tokenB.denom as string).value || '0'
 			}
-		})
+		}))
 
 		const submitFn = async () => {
 			const depositorAddress = store.getters['common/wallet/address']
@@ -119,7 +119,7 @@ export default defineComponent({
 						fee: deposit.fee
 					}
 				)
-				console.log({ result })
+				console.log({ depositResult: result })
 
 				if (result.code) {
 					throw new Error(result.rawLog)

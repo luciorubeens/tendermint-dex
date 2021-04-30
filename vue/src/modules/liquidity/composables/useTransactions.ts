@@ -9,7 +9,7 @@ type Props = {
 
 export function useTransactions({ query }: Props) {
 	const store = useStore()
-	const { signal } = useRefreshController()
+	const { refreshSignal } = useRefreshController()
 
 	const eventParams = computed(() => {
 		const params = new URLSearchParams()
@@ -30,7 +30,7 @@ export function useTransactions({ query }: Props) {
 	})
 
 	watch(eventParams, promise.execute)
-	watch(signal, promise.execute)
+	watch(refreshSignal, promise.execute)
 
 	return promise
 }

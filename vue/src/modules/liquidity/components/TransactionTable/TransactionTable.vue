@@ -17,7 +17,7 @@
 		<template v-if="isPending"> Loading... </template>
 
 		<template v-else-if="error">
-			{{ error }}
+			<Alert status="error" :message="error" />
 		</template>
 
 		<template v-else>
@@ -78,6 +78,18 @@
 import { computed, defineComponent, ref } from 'vue'
 import { usePool, useTransactions } from '../../composables'
 import dayjs from 'dayjs'
+import { Coin } from '../../interfaces'
+
+import Alert from '../Alert'
+
+type TransactionRowType = {
+	height: string
+	timestamp: string
+	action: string
+	account: string
+	tokenA: Coin
+	tokenB?: Coin
+}
 
 const tabActionMap = {
 	deposit: 'deposit_within_batch',
@@ -89,6 +101,10 @@ type TabActionType = keyof typeof tabActionMap
 
 export default defineComponent({
 	name: 'TransactionTable',
+
+	components: {
+		Alert,
+	},
 
 	props: {
 		poolId: {
@@ -112,11 +128,11 @@ export default defineComponent({
 
 		const { isPending, data, error } = useTransactions({ query })
 
-		const formatRow = (transaction: any) => {
+		const formatRow = (transaction: Record<string, any>) => {
 			const message = transaction.tx?.body?.messages?.[0]
 			const txType = message?.['@type']
 
-			const row: any = {
+			const row: Partial<TransactionRowType> = {
 				height: transaction.height,
 				timestamp: dayjs(transaction.timestamp).format('D MMM, YYYY h:mm A')
 			}
@@ -155,8 +171,10 @@ export default defineComponent({
 			}
 
 			return data.value.tx_responses
-				.map((tx: any) => formatRow(tx))
-				.sort((a: any, b: any) => (+a.height < +b.height ? 1 : -1))
+				.map((tx: Record<string, any>) => formatRow(tx))
+				.sort((a: TransactionRowType, b: TransactionRowType) =>
+					+a.height < +b.height ? 1 : -1
+				)
 		})
 
 		return {
