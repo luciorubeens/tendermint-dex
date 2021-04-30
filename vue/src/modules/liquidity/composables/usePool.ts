@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { useBank } from './useBank'
 import { useLiquidityPools } from './useLiquidityPools'
 
@@ -14,9 +14,14 @@ export function usePool({ poolId }: Props) {
 		address: pool.value?.reserve_account_address || ''
 	})
 
-	const reserveBalances = reactive({
-		tokenA: allBalances.value[0],
-		tokenB: allBalances.value[1]
+	const reserveBalances = computed(() => {
+		if (!allBalances.value.length) {
+			return undefined
+		}
+		return {
+			[allBalances.value[0].denom]: allBalances.value[0],
+			[allBalances.value[1].denom]: allBalances.value[1],
+		}
 	})
 
 	const calculateShares = ({
@@ -26,21 +31,26 @@ export function usePool({ poolId }: Props) {
 		amount: string
 		supplyAmount: string
 	}) => {
+		if (!allBalances.value.length) {
+			return undefined
+		}
+
+		const denoms = Object.keys(reserveBalances.value!);
 		const result = {
-			tokenA: { denom: reserveBalances.tokenA.denom, amount: '0' },
-			tokenB: { denom: reserveBalances.tokenB.denom, amount: '0' }
+			[denoms[0]]: { denom: denoms[0], amount: '0' },
+			[denoms[1]]: { denom: denoms[1], amount: '0' }
 		}
 
 		const sharesPercentage = new BigNumber(amount).dividedBy(
 			supplyAmount || pool.value?.meta.supplyAmount || 0
 		)
 
-		result.tokenA.amount = sharesPercentage
-			.multipliedBy(reserveBalances.tokenA.amount)
+		result[denoms[0]].amount = sharesPercentage
+			.multipliedBy(reserveBalances.value![denoms[0]].amount)
 			.toString()
 
-		result.tokenB.amount = sharesPercentage
-			.multipliedBy(reserveBalances.tokenB.amount)
+		result[denoms[1]].amount = sharesPercentage
+			.multipliedBy(reserveBalances.value![denoms[1]].amount)
 			.toString()
 
 		return {

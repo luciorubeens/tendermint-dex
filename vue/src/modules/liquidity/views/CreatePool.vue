@@ -77,7 +77,13 @@ export default defineComponent({
 
 		const pool = reactive({
 			pair,
-			fee: []
+			fee:	[
+				{
+					// TODO: hard coded as this appears to be necessary to transmit transactions on the Gravity DEX Testnet
+					amount: '200',
+					denom: liquidityParams.value?.pool_creation_fee[0].denom
+				}
+			]
 		})
 
 		const submitFn = async () => {
@@ -96,7 +102,7 @@ export default defineComponent({
 				'tendermint.liquidity.v1beta1/sendMsgCreatePool',
 				{ value, fee }
 			)
-
+			console.log({ result })
 			if (result.code) {
 				throw new Error(result.rawLog)
 			}
