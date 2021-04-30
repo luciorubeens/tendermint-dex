@@ -9,7 +9,7 @@
 				<template v-else>
 					<div class="pool__wrapper__container">
 						<div class="sp-component-title">
-							<h3>Pair {{ pool.meta.name }}</h3>
+							<h3 class="truncate">Pair {{ pool.meta.name }}</h3>
 						</div>
 
 						<div class="pool__stats sp-box sp-shadow">

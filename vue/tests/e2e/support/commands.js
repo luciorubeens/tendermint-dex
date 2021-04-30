@@ -52,17 +52,13 @@ Cypress.Commands.add(
 Cypress.Commands.add('inputTokenPair', (coins) => {
 	cy.get('.input-token-pair__a .sp-amount-select__denom').click()
 
-	cy.get('.sp-amount-select__denom__modal__item')
-		.eq(0)
-		.should('contains.text', coins[0].denom)
+	cy.contains('.sp-amount-select__denom__modal__item', coins[0].denom)
 		.click()
 
 	cy.get('.input-token-pair__a .sp-input').first().focus().type(coins[0].amount)
 
 	cy.get('.input-token-pair__b .sp-amount-select__denom').click()
-	cy.get('.sp-amount-select__denom__modal__item')
-		.eq(1)
-		.should('contains.text', coins[1].denom)
+	cy.contains('.sp-amount-select__denom__modal__item', coins[1].denom)
 		.click()
 
 	cy.get('.input-token-pair__b .sp-input').first().focus().type(coins[1].amount)

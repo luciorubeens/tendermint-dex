@@ -34,7 +34,7 @@
 							<tbody>
 								<tr v-for="pool in pools" :key="pool.name">
 									<td class="pools__table__id">{{ pool.id }}</td>
-									<td class="pools__table__name">{{ pool.meta.name }}</td>
+									<td class="pools__table__name truncate">{{ pool.meta.name }}</td>
 									<td class="pools__table__reserve-account">
 										{{ pool.reserve_account_address }}
 									</td>

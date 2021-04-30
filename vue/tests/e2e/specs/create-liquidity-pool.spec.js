@@ -33,8 +33,8 @@ describe('Create Liquidity Pool', () => {
 		cy.importWallet()
 
 		cy.inputTokenPair([
-			{ denom: 'UATOM', amount: '100' },
-			{ denom: 'UBAND', amount: '200' }
+			{ denom: 'UAKT', amount: '100' },
+			{ denom: 'UATOM', amount: '200' }
 		])
 
 		cy.get('.create-pool__form__submit').click()
@@ -55,7 +55,7 @@ describe('Create Liquidity Pool', () => {
 
 		cy.inputTokenPair([
 			{ denom: 'UATOM', amount: '1000000' },
-			{ denom: 'UBAND', amount: '1000000' }
+			{ denom: 'UIRIS', amount: '1000000' }
 		])
 
 		cy.get('.create-pool__form__submit').click()
