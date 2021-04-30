@@ -4,7 +4,7 @@ describe('View Pools List', () => {
 	})
 
 	it('should show pool name', () => {
-		cy.get('.sp-component-title h3').should('contains.text', 'Pair UATOM-UIRIS')
+		cy.get('.sp-component-title h3').should('contains.text', 'Pair UREGEN-XRUN')
 	})
 
 	it('should list transactions', () => {
@@ -26,11 +26,5 @@ describe('View Pools List', () => {
 			.eq(2)
 			.should('have.text', 'swap')
 			.click()
-
-		// TODO: Mock transactions request
-		cy.get('.transaction-table__empty-msg').should(
-			'contains.text',
-			'No swap transactions found.'
-		)
 	})
 })

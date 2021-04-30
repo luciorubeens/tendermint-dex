@@ -10,9 +10,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, unref } from 'vue'
+import { computed, defineComponent, reactive, ref, unref } from 'vue'
 import { useStore } from 'vuex'
-import { useBank, useLiquidityPools, useWallet } from '../../composables'
+import { useBank, useLiquidityParams, useLiquidityPools, useWallet } from '../../composables'
 
 export default defineComponent({
 	name: 'WithdrawForm',
@@ -28,10 +28,19 @@ export default defineComponent({
 		const { address } = useWallet()
 		const { balanceByDenom } = useBank({ address })
 		const { findPoolById } = useLiquidityPools()
+		const { liquidityParams } = useLiquidityParams()
 
 		const pool = findPoolById(props.poolId)
 
 		const walletPoolBalance = balanceByDenom(pool.value!.pool_coin_denom)
+
+		const fee = computed(() => [
+			{
+				// TODO: hard coded as this appears to be necessary to transmit transactions on the Gravity DEX Testnet
+				amount: '200',
+				denom: liquidityParams.value?.pool_creation_fee[0].denom
+			}
+		])
 
 		const poolCoin = reactive({
 			amount: '',
@@ -48,7 +57,7 @@ export default defineComponent({
 			try {
 				const result = await store.dispatch(
 					'tendermint.liquidity.v1beta1/sendMsgWithdrawWithinBatch',
-					{ value }
+					{ value, fee: fee.value }
 				)
 				poolCoin.amount = ''
 				console.log({ result })

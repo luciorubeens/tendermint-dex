@@ -17,6 +17,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
 import { useStore } from 'vuex'
+import { useLiquidityParams } from '../../composables'
 
 // TODO: Handle error state
 export default defineComponent({
@@ -37,6 +38,7 @@ export default defineComponent({
 
 	setup(props, { emit }) {
 		const store = useStore()
+		const { liquidityParams } = useLiquidityParams()
 
 		const pair = reactive({
 			tokenA: {
@@ -51,7 +53,13 @@ export default defineComponent({
 
 		const deposit = reactive({
 			pair,
-			fee: []
+			fee: [
+				{
+					// TODO: hard coded as this appears to be necessary to transmit transactions on the Gravity DEX Testnet
+					amount: '200',
+					denom: liquidityParams.value?.pool_creation_fee[0].denom
+				}
+			]
 		})
 
 		const submit = async () => {
@@ -63,7 +71,10 @@ export default defineComponent({
 			try {
 				const result = await store.dispatch(
 					'tendermint.liquidity.v1beta1/sendMsgDepositWithinBatch',
-					{ value, fee: deposit.fee }
+					{
+						value,
+						fee: deposit.fee
+					}
 				)
 				console.log({ result })
 

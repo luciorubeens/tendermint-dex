@@ -9,7 +9,7 @@
 				<template v-else>
 					<div class="pool__wrapper__container">
 						<div class="sp-component-title">
-							<h3>Pair {{ pool.meta.name }}</h3>
+							<h3 class="truncate">Pair {{ pool.meta.name }}</h3>
 						</div>
 
 						<div class="pool__stats sp-box sp-shadow">
@@ -116,7 +116,7 @@ export default defineComponent({
 			if (!pool.value) {
 				return '0'
 			}
-			return balanceByDenom(pool.value.pool_coin_denom)
+			return balanceByDenom(pool.value.pool_coin_denom).value
 		})
 
 		watch(signal, () => {
@@ -147,6 +147,9 @@ export default defineComponent({
 .pool__wrapper__container {
 	flex: 1 1 0%;
 	margin-right: 4rem;
+}
+.pool__wrapper__actions {
+	width: 30%;
 }
 .pool__transactions {
 	margin-top: 2rem;
